@@ -336,12 +336,28 @@ export const swipeEnd = (e, spec) => {
     let slideCount, newSlide
     switch (swipeDirection) {
       case 'left':
+        if (!spec.rtl) {
+          newSlide = currentSlide + getSlideCount(spec)
+        } else {
+          newSlide = currentSlide - getSlideCount(spec)
+        }
+        slideCount = swipeToSlide ? checkNavigable(spec, newSlide) : newSlide
+        state['currentDirection'] = 0
+        break
       case 'up':
         newSlide = currentSlide + getSlideCount(spec)
         slideCount = swipeToSlide ? checkNavigable(spec, newSlide) : newSlide
         state['currentDirection'] = 0
         break
       case 'right':
+        if (!spec.rtl) {
+          newSlide = currentSlide - getSlideCount(spec)
+        } else {
+          newSlide = currentSlide + getSlideCount(spec)
+        }
+        slideCount = swipeToSlide ? checkNavigable(spec, newSlide) : newSlide
+        state['currentDirection'] = 1
+        break
       case 'down':
         newSlide = currentSlide - getSlideCount(spec)
         slideCount = swipeToSlide ? checkNavigable(spec, newSlide) : newSlide
@@ -643,9 +659,6 @@ export const initializedState = spec => {
   let listHeight = slideHeight * spec.slidesToShow
   let currentSlide =
     spec.currentSlide === undefined ? spec.initialSlide : spec.currentSlide
-  if (spec.rtl && spec.currentSlide === undefined) {
-    currentSlide = slideCount - 1 - spec.initialSlide
-  }
   let lazyLoadedList = spec.lazyLoadedList || []
   let slidesToLoad = getOnDemandLazySlides(
     { currentSlide, lazyLoadedList },
@@ -717,7 +730,12 @@ export const getTrackLeft = spec => {
 
   let slidesToOffset = 0
   if (infinite) {
-    slidesToOffset = -getPreClones(spec) // bring active slide to the beginning of visual area
+    // bring active slide to the beginning of visual area
+    if (spec.rtl) {
+      slidesToOffset = getPreClones(spec)
+    } else {
+      slidesToOffset = -getPreClones(spec)
+    }
     // if next scroll doesn't have enough children, just reach till the end of original slides instead of shifting slidesToScroll children
     if (
       slideCount % slidesToScroll !== 0 &&
@@ -746,7 +764,11 @@ export const getTrackLeft = spec => {
   verticalOffset = slidesToOffset * slideHeight
 
   if (!vertical) {
-    targetLeft = slideIndex * slideWidth * -1 + slideOffset
+    if (spec.rtl) {
+      targetLeft = slideIndex * slideWidth + slideOffset
+    } else {
+      targetLeft = slideIndex * slideWidth * -1 + slideOffset
+    }
   } else {
     targetLeft = slideIndex * slideHeight * -1 + verticalOffset
   }
