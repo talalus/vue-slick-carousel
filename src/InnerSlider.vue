@@ -62,6 +62,9 @@ export default {
         slideCount: this.slideCount,
       }
     },
+    dir() {
+      return this.rtl ? 'rtl' : 'ltr';
+    }
   },
   created() {
     // non-reactive data
@@ -680,7 +683,7 @@ export default {
     })
 
     return (
-      <div class={className} dir={!this.unslick ? 'ltr' : false}>
+      <div class={className} dir={!this.unslick ? this.dir : false}>
         {!this.unslick ? prevArrow : ''}
         <div
           ref="list"
