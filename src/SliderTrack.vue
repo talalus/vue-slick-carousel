@@ -197,11 +197,7 @@ export default {
         }
       }, this)
 
-      if (spec.rtl) {
-        return preCloneSlides.concat(slides, postCloneSlides).reverse()
-      } else {
-        return preCloneSlides.concat(slides, postCloneSlides)
-      }
+      return preCloneSlides.concat(slides, postCloneSlides)
     },
   },
   render() {
