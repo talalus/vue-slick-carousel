@@ -230,7 +230,8 @@ export default {
     title: 'Right To Left',
     settings: {
       dots: true,
-      infinite: true,
+      infinite: false,
+      slidesToShow: 5,
       slidesToScroll: 1,
       rtl: true,
     },
